@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>A Jornada do Herói Destemido</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Mensagem para girar o dispositivo -->
+    <div id="orientation-warning">
+        <p>Por favor, gire o seu dispositivo para o modo paisagem para jogar.</p>
+    </div>
+
+    <!-- Container principal do jogo que será redimensionado -->
+    <div id="game-container">
+        <div id="dev-message" class="hidden">EM DESENVOLVIMENTO!</div>
+        
+        <div id="save-warning-message" class="hidden">VOCÊ AINDA NÃO INICIOU O JOGO PARA SALVÁ-LO!</div>
+        
+        <div id="save-feedback-message" class="hidden"></div>
+
+        <div id="start-screen">
+            <div class="start-screen-text-container">
+                <p>Clique para Jogar o Beta</p>
+                <p class="credits">Feito por: Davi / Turma: 3° ano (EMTI) / Ano: 2025</p>
+            </div>
+        </div>
+
+        <button id="settings-button" title="Configurações" class="hidden"></button>
+
+        <button id="adm-button" title="Painel do Administrador" class="hidden"></button>
+
+        <div id="drachmas-display" class="hidden">Dracmas: 0</div>
+
+        <div id="adm-modal" class="hidden">
+            <div id="adm-panel">
+                <div class="adm-input-group">
+                    <label for="adm-drachmas">Dracmas:</label>
+                    <input type="number" id="adm-drachmas">
+                </div>
+                <div class="adm-buttons">
+                    <button id="save-btn" class="adm-btn">SALVAR</button>
+                    <button id="back-btn" class="adm-btn">VOLTAR</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings-modal" class="hidden">
+            <div id="settings-panel">
+                <button id="close-settings-btn" title="Voltar"></button>
+                <div class="volume-control-container">
+                    <span id="volume-label">Volume:</span>
+                    <div class="volume-slider-wrapper">
+                        <input type="range" id="volume-slider" min="0" max="100">
+                        <span id="volume-value">50%</span>
+                    </div>
+                </div>
+                <div id="settings-actions-container">
+                    <button id="save-progress-btn" class="settings-action-btn">SALVAR<br>PROGRESSO</button>
+                    <button id="exit-game-btn" class="settings-action-btn">SAIR</button>
+                </div>
+                </div>
+        </div>
+
+        <audio id="menu-music-1" src="./SRC/Sons/Trilha%20Sonora/Tela%20Inicial/A%20Lenda%20do%20Her%C3%B3i.mp3"></audio>
+        <audio id="menu-music-2" src="./SRC/Sons/Trilha%20Sonora/Tela%20Inicial/A%20Lenda%20do%20Her%C3%B3i%202.mp3"></audio>
+        <audio id="gameplay-music-1" src="./SRC/Sons/Trilha%20Sonora/Jogo/Can%C3%A7%C3%A3o%20do%20Her%C3%B3i%20Pixelado.mp3"></audio>
+        <audio id="gameplay-music-2" src="./SRC/Sons/Trilha%20Sonora/Jogo/Can%C3%A7%C3%A3o%20do%20Her%C3%B3i%20Pixelado%202.mp3"></audio>
+        <audio id="click-sound" src="./SRC/Sons/Click/mouse-click-290204.mp3"></audio>
+        <audio id="mission-journey-music" src="./SRC/Sons/Trilha Sonora/Combate/Inimigos Normails/1° - 3° Missão/O Último Guardião.mp3" loop></audio>
+        <audio id="dice-sound" src="./SRC/Sons/Som%20do%20Dado/Dado.mp3"></audio>
+        <audio id="player-attack-sound" src="./SRC/Sons/Ataque do Jogador/Ataque sem Arma/Soco.mp3"></audio>
+        <audio id="player-special-attack-sound" src="./SRC/Sons/Ataque do Jogador/Ataque Especial/sword-35999.mp3"></audio>
+        <audio id="enemy-attack-sound" src="./SRC/Sons/Ataque dos Inimigos/Slime/slime-impact-352473.mp3"></audio>
+        <audio id="enemy-dodge-sound" src="./SRC/Sons/Esquiva/swoosh-sound-effect-1-103130.mp3"></audio>
+
+        <div id="main-menu-container" class="screen hidden">
+            <h1 class="game-title">A JORNADA DO<br>HERÓI DESTEMIDO</h1>
+            <div class="menu-buttons">
+                <button id="new-game-btn" class="menu-btn">JOGO NOVO</button>
+                <button id="load-game-btn" class="menu-btn">CARREGAR JOGO</button>
+                <button id="instructions-btn" class="menu-btn">COMO O JOGO FUNCIONA</button>
+            </div>
+        </div>
+
+        <div id="load-game-screen" class="screen hidden">
+            <div id="load-game-panel">
+                <button id="back-from-load-btn" title="Voltar"></button>
+                <h2 id="load-game-panel-title">CARREGAR JOGO</h2>
+                <div class="save-slots-container">
+                    <div id="save-slots-wrapper"></div>
+                    <p id="no-saves-message" class="hidden">Você não tem nenhum save salvo</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="instructions-screen" class="screen hidden">
+            <h2 id="instructions-panel-title">INSTRUÇÕES</h2>
+            <div id="instructions-panel">
+                <button id="back-from-instructions-btn" title="Voltar"></button>
+                <div id="instructions-text">
+                    <p>O jogo é um RPG com uma leve inspiração em RPG de mesa, ou seja, nas batalhas você irá rolar um dado para decidir quem ataca. O combate funciona da seguinte forma: você rolará um dado de 20 lados. Se cair de 0-12, você irá sofrer um ataque do inimigo; se cair entre 13-17, você irá conseguir desferir um ataque bem sucedido no inimigo; e se cair de 18-20, você conseguirá atacar o inimigo com uma habilidade especial que dá 100% mais dano e consome 15 pontos de stamina (que regenera 5 por vez que você rolar o dado), se você estiver sem stamina para executar um ataque especial, você acertará um ataque bem sucedido no inimigo, porém com 50% mais dano.</p>
+                    <p>Status (explicados):</p>
+                    <p>ATQ: ataque base;</p>
+                    <p>HP: vida base;</p>
+                    <p>PS: energia/stamina base;</p>
+                    <p>Sub-status (explicados):</p>
+                    <p>ATQ em %: é adicionado ao ataque básico em porcentagem(%);</p>
+                    <p>HP em %: é adicionado ao HP básico em porcentagem(%);</p>
+                    <p>DEF em %: reduz o dano tomado em porcentagem (%);</p>
+                    <p>Taxa Crít.: chance de desferir um ataque crítico;</p>
+                    <p>Dano Crít.: é adicionado ao dano final em porcentagem(%);</p>
+                    <p>Precisão: chance de acertar um ataque e de aplicar debuffs nos inimigos;</p>
+                    <p>Perfuração: aumenta o dano causado aos inimigos;</p>
+                    <p>Cap. de DEF: diminui o dano recebido ao bloquear;</p>
+                    <p>Resistência: diminui as chances de sofrer um debuff</p>
+                    <p>Resist. ATQ Crít.: diminui as chaces de sofrer um ATQ crítico;</p>
+                    <p>Taxa de Bloqueio: chance de bloquear um um ATQ;</p>
+                    <p>Taxa de Esquiva: chance de esquivar de um ATQ.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="character-selection-screen" class="screen hidden">
+            <h2 id="character-selection-title">ESCOLHA UM PERSONAGEM</h2>
+            <div class="character-cards-container">
+                <div id="hero-card" class="character-card"></div>
+                <div id="heroine-card" class="character-card"></div>
+            </div>
+        </div>
+
+        <div id="name-entry-screen" class="screen hidden">
+            <h2 id="name-entry-title">ESCOLHA UM NOME:</h2>
+            <div id="name-input-container">
+                <input type="text" id="name-input" maxlength="15" placeholder="Digite um Nome...">
+            </div>
+            <button id="confirm-name-btn">CONFIRMAR</button>
+        </div>
+
+        <div id="story-screen" class="screen hidden">
+            <div id="story-panel">
+                <div id="story-text">
+                    </div>
+                <button id="next-btn">Next ></button>
+            </div>
+        </div>
+
+        <div id="gameplay-screen" class="screen hidden">
+            <div id="gameplay-buttons-container">
+                <button id="blacksmith-btn" class="gameplay-btn">FERREIRO</button>
+                <button id="mission-btn" class="gameplay-btn">MISSÃO</button>
+                <button class="gameplay-btn">VENDEDOR DE POÇÃO</button>
+                <button class="gameplay-btn">INVENTÁRIO</button>
+            </div>
+        </div>
+
+        <div id="blacksmith-screen" class="screen hidden">
+            <div id="blacksmith-panel">
+                <button id="back-from-blacksmith-btn" title="Voltar"></button>
+                <div id="blacksmith-character"></div>
+                <div id="dialog-bubble">
+                    <p>Sinta-se a vontade!</p>
+                </div>
+                <div id="shop-buttons">
+                    <button class="shop-btn" id="swords-btn">ESPADAS</button>
+                    <button class="shop-btn">PEITORAIS</sbutton>
+                    <button class="shop-btn">LUVAS</button>
+                    <button class="shop-btn">CAPACETES</button>
+                    <button class="shop-btn">ESCUDOS</button>
+                    <button class="shop-btn">CALÇAS</sbutton>
+                    <button class="shop-btn">BOTAS</button>
+                </div>
+                <div id="items-for-sale"></div>
+                <div id="item-info"></div>
+            </div>
+        </div>
+
+        <div id="swords-screen" class="screen hidden">
+            <div id="swords-panel">
+                <button id="back-from-swords-btn" title="Voltar"></button>
+                <div id="swords-grid"></div>
+            </div>
+        </div>
+
+        <div id="visualize-modal" class="screen hidden">
+            <div id="visualize-panel">
+                <button id="close-visualize-btn" title="Fechar"></button>
+                <h3 id="visualize-item-name">Nome do Item</h3>
+                <div id="visualize-image-container">
+                    <img id="visualize-item-image" src="" alt="Imagem do Item">
+                </div>
+                <button id="visualize-desc-btn">DESCRIÇÃO</button>
+                <div id="visualize-price-container">
+                    <span id="visualize-item-price">D$: ???</span>
+                </div>
+                <button id="visualize-buy-btn">COMPRAR</button>
+            </div>
+        </div>
+
+        <div id="mission-screen" class="screen hidden">
+            <div id="mission-panel">
+                <button id="back-from-mission-btn" title="Voltar"></button>
+                <div id="mission-character"></div>
+
+                <div id="player-name-display" class="character-name"></div>
+
+                <div id="mission-dialog-bubble" class="dialog-bubble-base">
+                    <div id="mission-dialog-text"></div>
+                </div>
+
+                <div id="elder-apprentice"></div>
+
+                <div id="elder-name-display" class="character-name">Ancião Aprendiz</div>
+
+                <div id="elder-dialog-bubble" class="dialog-bubble-base">
+                    <div id="elder-dialog-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mission-journey-screen" class="screen hidden">
+            <div id="mission-journey-panel">
+                <div id="mission-journey-text">
+                    </div>
+                <button id="next-journey-btn">Next -></button>
+            </div>
+        </div>
+
+        <div id="battle-screen" class="screen hidden">
+            <div id="player-hud">
+                <div class="status-bar-container">
+                    <img src="./SRC/Elementos%20do%20Jogo/Complento%20da%20Barra%20de%20vida-Photoroom.png" class="status-icon" alt="Ícone de Vida">
+                    <div class="status-bar" id="player-health-bar">
+                        <div class="status-bar-fill" id="player-health-fill"></div>
+                        <span class="status-bar-text" id="player-health-text">100/100</span>
+                    </div>
+                </div>
+                <div class="status-bar-container">
+                    <img src="./SRC/Elementos%20do%20Jogo/Complento%20da%20Barra_de_Stamina-removebg-preview.png" class="status-icon" alt="Ícone de Stamina">
+                    <div class="status-bar" id="player-stamina-bar">
+                        <div class="status-bar-fill" id="player-stamina-fill"></div>
+                        <span class="status-bar-text" id="player-stamina-text">50/50</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="enemy-hud">
+                <span id="enemy-name-text">Slime</span>
+                <div class="status-bar-container enemy">
+                    <div class="status-bar" id="enemy-health-bar">
+                        <div class="status-bar-fill" id="enemy-health-fill"></div>
+                        <span class="status-bar-text" id="enemy-health-text">150/150</span>
+                    </div>
+                    <img src="./SRC/Elementos%20do%20Jogo/Complento%20da%20Barra%20de%20vida-Photoroom.png" class="status-icon" alt="Ícone de Vida">
+                </div>
+            </div>
+
+            <div id="battle-player" class="battle-character"></div>
+            <div id="battle-enemy" class="battle-character"></div>
+            
+            <img id="attack-impact-img" class="hidden" src="./SRC/Elementos do Jogo/Dar e Receber Dano.png" alt="Impacto do Ataque">
+            <div id="floating-text-container"></div>
+
+
+            <div id="battle-actions-container">
+                <div id="actions-background">
+                    <button id="roll-dice-btn">ROLAR DADO</button>
+                    <div id="potion-slots-container">
+                        <div class="potion-slot"></div>
+                        <div class="potion-slot"></div>
+                        <div class="potion-slot"></div>
+                        <div class="potion-slot"></div>
+                        <div class="potion-slot"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="speed-multiplier-btn">x1</button>
+        </div>
+        
+        <div id="dice-animation-container" class="hidden">
+            <img id="dice-gif" src="./SRC/Elementos%20do%20Jogo/Dado.gif" alt="Dado rolando">
+        </div>
+
+        <div id="dice-result-container" class="hidden">
+            <p id="dice-result"></p>
+        </div>
+
+        <div id="victory-screen" class="screen hidden">
+            <div id="victory-content">
+                <h1 id="victory-title">VOCÊ VENCEU!</h1>
+                <div id="victory-rewards">
+                    <p id="xp-reward"></p>
+                    <p id="drachmas-reward"></p>
+                </div>
+                <div id="victory-buttons">
+                    <button id="victory-blacksmith-btn" class="victory-btn">FERREIRO</button>
+                    <button id="victory-next-mission-btn" class="victory-btn">PRÓXIMA MISSÃO</button>
+                    <button id="victory-potions-btn" class="victory-btn">POÇÕES</button>
+                    <button id="victory-inventory-btn" class="victory-btn">INVENTÁRIO</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="defeat-screen" class="screen hidden">
+            <div id="defeat-content">
+                <h1 id="defeat-title">VOCÊ PERDEU!</h1>
+                <p id="defeat-subtitle">Mais sorte da próxima vez</p>
+                <div id="defeat-buttons">
+                    <button id="defeat-blacksmith-btn" class="defeat-btn">FERREIRO</button>
+                    <button id="defeat-retry-btn" class="defeat-btn">JOGAR NOVAMENTE</button>
+                    <button id="defeat-potions-btn" class="defeat-btn">POÇÕES</button>
+                    <button id="defeat-inventory-btn" class="defeat-btn">INVENTÁRIO</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="end-of-beta-screen" class="screen hidden">
+            <div id="end-of-beta-content">
+                <h2>Muito obrigado por ter jogado a versão beta do meu jogo!</h2>
+                <p>Se gostou, aguarde ansiosamente pela versão completa.</p>
+                <p id="end-of-beta-footer">*Clique eu qualquer lugar da tela para voltar ao menu principal*</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>

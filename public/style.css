@@ -1,0 +1,1876 @@
+/* Importa uma fonte estilo pixel para o jogo */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Estilos gerais */
+body {
+    background-color: #000000;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* --- MENSAGEM DE ORIENTAÇÃO --- */
+#orientation-warning {
+    display: none; /* Controlado por JS */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 10000;
+}
+
+/* --- CONTAINER PRINCIPAL DO JOGO --- */
+#game-container {
+    position: absolute;
+    width: 1280px; /* Largura base (16:9) */
+    height: 720px;  /* Altura base (16:9) */
+    transform-origin: top left;
+    overflow: hidden;
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rio%20do%20In%C3%ADcio%20do%20jogo.png');
+    background-size: cover;
+    background-position: center;
+    font-family: 'Press Start 2P', cursive;
+    image-rendering: pixelated;
+    display: none; /* Começa escondido, JS mostra */
+}
+
+
+/* --- MENSAGEM DE DESENVOLVIMENTO --- */
+#dev-message, #save-warning-message, #save-feedback-message { 
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 25px 45px;
+    border: 4px solid #fff;
+    border-radius: 10px;
+    font-size: 1.5em;
+    text-shadow: 3px 3px #000;
+    z-index: 9999;
+    text-align: center;
+    pointer-events: none;
+}
+
+
+/* --- TELA DE INÍCIO --- */
+#start-screen {
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    cursor: pointer;
+    z-index: 3000;
+    text-align: center;
+}
+
+.start-screen-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#start-screen p {
+    margin: 0;
+}
+
+#start-screen .credits {
+    font-size: 0.6em;
+    margin-top: 15px;
+    color: #e0e0e0;
+}
+
+
+/* --- ESTRUTURA COMUM PARA TELAS --- */
+.screen {
+    width: 100%;
+    height: 100%;
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rio%20do%20In%C3%ADcio%20do%20jogo.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* --- TELA DE MENU PRINCIPAL --- */
+#main-menu-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.game-title {
+    font-size: 3.5em;
+    color: #ffffff;
+    text-shadow: 5px 5px 0px #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+    margin-bottom: 50px;
+    line-height: 1.3;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.menu-btn {
+    width: 350px;
+    height: 80px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5em;
+    color: #ffffff;
+    text-shadow: 2px 2px #000;
+    background-color: #8c5a3b;
+    border: none;
+    border-radius: 8px;
+    box-shadow: inset 0 -4px 0 0 #5a3a22, inset 0 4px 0 0 #a57d65, 0 8px 0 0 #4a2c2a;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: top 0.1s ease-out, box-shadow 0.1s ease-out, background-color 0.2s;
+}
+
+.menu-btn:hover {
+    background-color: #9c6b4c;
+}
+
+.menu-btn:active {
+    top: 8px;
+    box-shadow: inset 0 -4px 0 0 #5a3a22, inset 0 4px 0 0 #a57d65, 0 0px 0 0 #4a2c2a;
+}
+
+/* --- TELA DE CARREGAR JOGO --- */
+#load-game-panel {
+    width: 600px;
+    height: 550px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Quadrado.png');
+    background-size: 100% 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 40px 30px;
+}
+
+#load-game-panel-title {
+    font-size: 2em;
+    color: #fff;
+    text-shadow: 3px 3px #000;
+    margin: 0;
+    margin-bottom: 30px;
+    position: relative;
+    top: -80px;
+}
+
+#back-from-load-btn {
+    position: absolute;
+    top: -25px;
+    right: -30px;
+    width: 63px;
+    height: 63px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%20Voltar.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.save-slots-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-right: 10px;
+    margin-top: 0px;
+}
+
+.save-slot {
+    width: 400px;
+    height: 130px;
+    flex-shrink: 0;
+    background-color: #8c6046;
+    border: 5px solid #4f382e;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 5px #a1745a, inset 0 0 0 10px #5e4539;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    gap: 20px;
+    position: relative;
+}
+
+.save-slot:hover {
+    filter: brightness(1.2);
+}
+
+.delete-save-btn {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background-image: url('./SRC/Elementos\ do\ Jogo/X.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.delete-save-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.delete-save-btn:active {
+    transform: translateY(-50%) scale(0.9);
+}
+
+
+.character-portrait {
+    width: 80px;
+    height: 80px;
+    background-color: #333;
+    border: 3px solid #5a3a22;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.character-info {
+    color: #fff;
+    text-align: left;
+    font-size: 1.2em;
+}
+
+.character-info p {
+    margin: 5px 0;
+}
+
+#no-saves-message {
+    color: #fff;
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 100px;
+}
+
+/* --- TELA DE INSTRUÇÕES --- */
+#instructions-panel {
+    width: 800px;
+    height: 550px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Ret%C3%A2ngulo.png');
+    background-size: 100% 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 80px 250px;
+}
+
+#instructions-panel-title {
+    font-size: 2.5em;
+    color: #fff;
+    text-shadow: 3px 3px #000;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+#back-from-instructions-btn {
+    position: absolute;
+    top: -25px;
+    right: 155px;
+    width: 63px;
+    height: 63px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%20Voltar.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#instructions-text {
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    font-size: 1.2em;
+    line-height: 1.6;
+    text-align: left;
+    overflow-y: auto;
+    padding-right: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: #a1745a #5e4539;
+}
+
+#instructions-text::-webkit-scrollbar {
+    width: 12px;
+}
+
+#instructions-text::-webkit-scrollbar-track {
+    background: #5e4539;
+    border-radius: 10px;
+}
+
+#instructions-text::-webkit-scrollbar-thumb {
+    background-color: #a1745a;
+    border-radius: 10px;
+    border: 3px solid #5e4539;
+}
+
+/* --- TELA DE SELEÇÃO DE PERSONAGEM --- */
+#character-selection-title {
+    font-size: 2.5em;
+    color: #fff;
+    text-shadow: 3px 3px #000;
+    margin-bottom: 40px;
+}
+
+.character-cards-container {
+    display: flex;
+    gap: 50px;
+}
+
+.character-card {
+    width: 300px;
+    height: 420px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    position: relative;
+}
+
+.character-card:hover {
+    transform: scale(1.05);
+}
+
+#hero-card {
+    background-image: url('./SRC/Personagens/Her%C3%B3i%20Card.jpg');
+}
+
+#heroine-card {
+    background-image: url('./SRC/Personagens/Hero%C3%ADna%20Card.jpg');
+}
+
+/* --- TELA DE ENTRADA DE NOME --- */
+#name-entry-title {
+    font-size: 2.5em;
+    color: #fff;
+    text-shadow: 3px 3px #000;
+    margin-bottom: 40px;
+}
+
+#name-input-container {
+    position: relative;
+    width: 425px;
+    height: 800px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Barra%20para%20Escrever%20o%20Nome.png');
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#name-input {
+    background-color: transparent;
+    border: none;
+    width: 80%;
+    height: 50%;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5em;
+    color: #333;
+}
+
+#name-input:focus {
+    outline: none;
+}
+
+#confirm-name-btn {
+    width: 250px;
+    height: 550px;
+    margin-top: 0;
+    padding: 0;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%205%20(verde).png');
+    background-size: 100% 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+}
+
+/* --- TELA DE HISTÓRIA --- */
+#story-panel {
+    width: 600px;
+    height: 600px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Quadrado%203.png');
+    background-size: 100% 100%;
+    box-sizing: border-box;
+    padding: 137px;
+    color: #fff;
+    font-size: 1.2em;
+    line-height: 1.6;
+    position: relative;
+    cursor: pointer;
+}
+
+#story-text {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #a1745a #5e4539;
+}
+
+#story-text::-webkit-scrollbar {
+    width: 12px;
+}
+
+#story-text::-webkit-scrollbar-track {
+    background: #5e4539;
+    border-radius: 10px;
+}
+
+#story-text::-webkit-scrollbar-thumb {
+    background-color: #a1745a;
+    border-radius: 10px;
+    border: 3px solid #5e4539;
+}
+
+#next-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 50px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+/* --- TELA DE JOGO PRINCIPAL --- */
+#gameplay-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rio.png');
+}
+
+#gameplay-buttons-container {
+    position: absolute;
+    bottom: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.gameplay-btn {
+    width: 250px;
+    height: 300px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%202.png');
+    background-size: 100% 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.gameplay-btn:hover {
+    transform: scale(1.1);
+}
+
+.gameplay-btn.clicked {
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%206.png');
+    transform: scale(0.95);
+}
+
+/* --- TELA DA FERRARIA --- */
+#blacksmith-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Ferraria.png');
+}
+
+#blacksmith-panel {
+    width: 750px;
+    height: 750px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Quadrado%202.png');
+    background-size: 100% 100%;
+    position: relative;
+}
+
+#back-from-blacksmith-btn {
+    position: absolute;
+    top: 80px;
+    right: 100px;
+    width: 63px;
+    height: 63px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%20Voltar.png');
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    z-index: 3;
+}
+
+#blacksmith-character {
+    position: absolute;
+    bottom: 0;
+    top: 267px;
+    right: 140px;
+    width: 193px;
+    height: 250px;
+    background-image: url('./SRC/NPCs/Ferreiro.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    transform: scaleX(-1);
+    z-index: 2;
+}
+
+#dialog-bubble {
+    position: absolute;
+    bottom: 280px;
+    right: 190px;
+    width: 200px;
+    height: 130px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bal%C3%A3o%20de%20Di%C3%A1logo.png');
+    background-size: 100% 100%;
+    padding: 35px;
+    box-sizing: border-box;
+    color: #333;
+    font-size: 0.8em;
+    line-height: 1.2;
+    transform: scaleX(-1);
+    z-index: 2;
+}
+
+#dialog-bubble > p {
+    transform: scaleX(-1);
+}
+
+#shop-buttons {
+    position: absolute;
+    top: 195px;
+    left: 221.5px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 2;
+    height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: #a1745a #5e4539;
+}
+
+#shop-buttons::-webkit-scrollbar {
+    width: 12px;
+}
+
+#shop-buttons::-webkit-scrollbar-track {
+    background: #5e4539;
+    border-radius: 10px;
+}
+
+#shop-buttons::-webkit-scrollbar-thumb {
+    background-color: #a1745a;
+    border-radius: 10px;
+    border: 3px solid #5e4539;
+}
+
+.shop-btn {
+    width: 145px;
+    height: 50px;
+    background-color: #7a4a31;
+    border: none;
+    border-radius: 8px;
+    box-shadow: inset 0 -6px 0 0 #4d2e1f, inset 0 6px 0 0 #a86f50, 0 8px 0 0 #3b2218;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: top 0.1s ease-out, box-shadow 0.1s ease-out, background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.shop-btn:hover {
+    background-color: #8a5a41;
+}
+
+.shop-btn:active {
+    top: 8px;
+    box-shadow: inset 0 -6px 0 0 #4d2e1f, inset 0 6px 0 0 #a86f50, 0 0 0 0 #3b2218;
+}
+
+#drachmas-display {
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 15px;
+    border: 3px solid #4f382e;
+    border-radius: 8px;
+    color: #f1c40f;
+    font-size: 1.1em;
+    text-shadow: 2px 2px #000;
+    z-index: 2100;
+}
+
+#items-for-sale {
+    position: absolute;
+    top: 333.5px;
+    right: 155px;
+    width: 170px;
+    height: 170px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Ret%C3%A2ngulo%202.png');
+    background-size: 100% 100%;
+    z-index: 1;
+}
+
+#item-info {
+    position: absolute;
+    bottom: 105px;
+    top: 150px;
+    left: 95px;
+    width: 400px;
+    height: 355px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Ret%C3%A2ngulo.png');
+    background-size: 100% 100%;
+    z-index: 1;
+}
+
+
+/* ----- Botão e Modal ADM ----- */
+#adm-button {
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/ADM.png');
+    background-size: cover;
+    background-color: transparent;
+    border: none;
+    cursor: grab;
+    z-index: 2500;
+}
+
+#adm-modal {
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+#adm-panel {
+    width: 750px;
+    height: 750px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Quadrado%202.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px;
+    box-sizing: border-box;
+}
+
+.adm-input-group {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 400px;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.adm-input-group label {
+    font-size: 1em;
+    text-shadow: 1px 1px #000;
+}
+
+.adm-input-group input {
+    width: 120px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    text-align: right;
+    background-color: #eee;
+    border: 2px solid #333;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.adm-buttons {
+    display: flex;
+    gap: 20px;
+    position: relative;
+    top: 145px;
+}
+
+.adm-btn {
+    width: 170px;
+    height: 200px;
+    border: none;
+    background-color: transparent;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    text-shadow: 2px 2px #000;
+}
+
+#save-btn {
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%205%20(verde).png');
+}
+
+#back-btn {
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%203%20(vermelho).png');
+}
+
+/* --- TELA DE ESPADAS --- */
+#swords-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Ferraria.png');
+}
+
+#swords-panel {
+    width: 820px;
+    height: 600px;
+    background-image: url("./SRC/Elementos%20do%20Jogo/Ret%C3%A2ngulo%202.png");
+    background-size: 100% 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#back-from-swords-btn {
+    position: absolute;
+    top: -25px;
+    right: 105px;
+    width: 63px;
+    height: 63px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%20Voltar.png');
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+#swords-grid {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    padding-right: 35px;
+    margin-top: 11px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 500px;
+    height: 100%;
+    position: relative;
+    left: 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #a1745a #5e4539;
+}
+
+#swords-grid::-webkit-scrollbar {
+    width: 12px;
+}
+
+#swords-grid::-webkit-scrollbar-track {
+    background: #5e4539;
+    border-radius: 10px;
+}
+
+#swords-grid::-webkit-scrollbar-thumb {
+    background-color: #a1745a;
+    border-radius: 10px;
+    border: 3px solid #5e4539;
+}
+
+.sword-item {
+    width: 230px;
+    background-image: url("./SRC/Elementos%20do%20Jogo/Ret%C3%A2ngulo%202.png");
+    background-size: 100% 100%;
+    background-color: transparent;
+    border: none;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 300px;
+}
+
+.sword-image-container {
+    background-color: #8c6046;
+    border: 5px solid #4f382e;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 5px #a1745a, inset 0 0 0 10px #5e4539;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.sword-image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.visualize-btn {
+    width: 200px;
+    height: 300px;
+    background-image: url("./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%205%20(verde).png");
+    background-size: 100% 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: transform 0.1s ease;
+}
+
+.visualize-btn.clicked {
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%206.png');
+    transform: scale(0.95);
+}
+
+/* --- TELA DE VISUALIZAÇÃO DE ITEM --- */
+#visualize-modal {
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+#visualize-panel {
+    width: 650px;
+    height: 600px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Ret%C3%A2ngulo%202.png');
+    background-size: 100% 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #fff;
+    text-shadow: 2px 2px #000;
+}
+
+#close-visualize-btn {
+    position: absolute;
+    top: -30px;
+    right: 75px;
+    width: 63px;
+    height: 63px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%20Voltar.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#visualize-item-name {
+    font-size: 1.8em;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+#visualize-image-container {
+    width: 200px;
+    height: 200px;
+    background-color: #333;
+    border: 5px solid #4f382e;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 5px #a1745a, inset 0 0 0 10px #5e4539;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+#visualize-item-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+#visualize-desc-btn {
+    width: 220px;
+    height: 200px;
+    background-image: url("./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%202.png");
+    background-size: 100% 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.1em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    transition: transform 0.1s ease;
+}
+
+#visualize-desc-btn:active {
+    transform: scale(0.95);
+}
+
+#visualize-price-container {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+#visualize-buy-btn {
+    width: 220px;
+    height: 200px;
+    background-image: url("./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%205%20(verde).png");
+    background-size: 100% 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+#visualize-buy-btn:active {
+    transform: scale(0.95);
+}
+
+.hidden {
+    display: none !important;
+}
+
+:root {
+    --bubble-main-color: #8c6046;
+    --bubble-border-color: #4f382e;
+    --bubble-text-color: #ffffff;
+}
+
+#mission-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rios%20de%20Miss%C3%B5es%20--%20Miss%C3%A3o%201%20-%203.png');
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer
+}
+
+#mission-character {
+    position: absolute;
+    bottom: -10px;
+    left: 25%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 350px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    z-index: 2;
+}
+
+.dialog-bubble-base {
+    background-color: var(--bubble-main-color);
+    border: 4px solid var(--bubble-border-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: var(--bubble-text-color);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.9em;
+    line-height: 1.3;
+    z-index: 2;
+    overflow-y: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    position: absolute;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bubble-main-color) var(--bubble-border-color);
+}
+
+.dialog-bubble-base::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dialog-bubble-base::-webkit-scrollbar-track {
+    background: var(--bubble-border-color);
+    border-radius: 10px;
+}
+
+.dialog-bubble-base::-webkit-scrollbar-thumb {
+    background-color: var(--bubble-main-color);
+    border-radius: 10px;
+    border: 2px solid var(--bubble-border-color);
+}
+
+#mission-dialog-bubble {
+    bottom: 270px;
+    left: 35%;
+    transform: translateX(-50%);
+    width: 250px;
+    height: 100px;
+}
+
+#mission-dialog-text {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+
+#elder-apprentice {
+    position: absolute;
+    bottom: 5px;
+    right: 25%;
+    transform: translateX(50%) scaleX(-1);
+    width: 250px;
+    height: 300px;
+    background-image: url('./SRC/NPCs/Aprendiz%20do%20Anci%C3%A3o%20(1%C2%B0%20%C3%A1%203%C2%B0%20Miss%C3%A3o).png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    z-index: 2;
+}
+
+#elder-dialog-bubble {
+    bottom: 200px;
+    right: 35%;
+    transform: translateX(50%);
+    width: 250px;
+    height: 100px;
+}
+
+#elder-dialog-text {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+
+.character-name {
+    position: absolute;
+    z-index: 3;
+}
+
+#player-name-display {
+    bottom: 430px;
+    left: 31%;
+    transform: translateX(-50%);
+    width: 250px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px #000;
+    font-size: 1.1em;
+    text-align: center;
+    word-wrap: break-word;
+    margin-bottom: -57px;
+}
+
+#elder-name-display {
+    bottom: 360px;
+    right: 31%;
+    transform: translateX(50%);
+    width: 250px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px #000;
+    font-size: 1.1em;
+    text-align: center;
+    word-wrap: break-word;
+    margin-bottom: -57px;
+}
+
+#mission-journey-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rio%20de%20Batalha%20--%20Floresta.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+#mission-journey-panel {
+    width: 600px;
+    height: 600px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Quadrado%203.png');
+    background-size: 100% 100%;
+    box-sizing: border-box;
+    padding: 137px;
+    color: #fff;
+    font-size: 1.2em;
+    line-height: 1.6;
+    position: relative;
+}
+
+#mission-journey-text {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #a1745a #5e4539;
+}
+
+#mission-journey-text::-webkit-scrollbar {
+    width: 12px;
+}
+
+#mission-journey-text::-webkit-scrollbar-track {
+    background: #5e4539;
+    border-radius: 10px;
+}
+
+#mission-journey-text::-webkit-scrollbar-thumb {
+    background-color: #a1745a;
+    border-radius: 10px;
+    border: 3px solid #5e4539;
+}
+
+#next-journey-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 50px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+#settings-button {
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Configura%C3%A7%C3%B5es.png');
+    background-size: contain;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 2600;
+}
+
+#settings-modal {
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4000;
+}
+
+#settings-panel {
+    width: 800px;
+    height: 800px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Quadrado%202.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    padding-top: 300px;
+    box-sizing: border-box;
+    position: relative;
+    color: white;
+    font-size: 1em;
+    text-shadow: 2px 2px #000;
+}
+
+#close-settings-btn {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    width: 63px;
+    height: 63px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Bot%C3%A3o%20Voltar.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#settings-actions-container {
+    position: absolute;
+    bottom: 125px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0;
+    justify-content: center;
+}
+
+.settings-action-btn {
+    width: 238px;
+    height: 200px;
+    background-size: 100% 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.1s ease;
+}
+
+.settings-action-btn:active {
+    transform: scale(0.95);
+}
+
+#exit-game-btn {
+    background-image: url('./SRC/Elementos%20do%20Jogo/Botão%203%20(vermelho).png');
+}
+
+
+.volume-control-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 80%;
+    max-width: 450px;
+    color: #fff;
+    text-shadow: 2px 2px #000;
+}
+
+.volume-slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 97.7%;
+}
+
+#volume-label {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#volume-value {
+    position: absolute;
+    bottom: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 1em;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    white-space: nowrap;
+}
+
+.volume-slider-wrapper:hover #volume-value {
+    opacity: 1;
+}
+
+#volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 25px;
+    outline: none;
+    border-radius: 10px;
+    border: 4px solid #4f382e;
+    box-shadow: inset 0 0 0 4px #a1745a;
+    cursor: pointer;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#volume-slider::-moz-range-thumb {
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#volume-slider[data-volume-level="nulo"]::-webkit-slider-thumb {
+    background-image: url('./SRC/Elementos%20do%20Jogo/%C3%8Dcone%20de%20Som%20Nulo.png');
+}
+#volume-slider[data-volume-level="baixo"]::-webkit-slider-thumb {
+    background-image: url('./SRC/Elementos%20do%20Jogo/%C3%8Dcone%20de%20Som%20Baixo.png');
+}
+#volume-slider[data-volume-level="medio"]::-webkit-slider-thumb {
+    background-image: url('./SRC/Elementos%20do%20Jogo/%C3%8Dcone%20de%20Som%20M%C3%A9dio.png');
+}
+#volume-slider[data-volume-level="maximo"]::-webkit-slider-thumb {
+    background-image: url('./SRC/Elementos%20do%20Jogo/%C3%8Dcone%20de%20Som%20M%C3%A1ximo.png');
+}
+
+#volume-slider[data-volume-level="nulo"]::-moz-range-thumb {
+    background-image: url('./SRC/Elementos%20do%20Jogo/%C3%8Dcone%20de%20Som%20Nulo.png');
+}
+#volume-slider[data-volume-level="baixo"]::-moz-range-thumb {
+    background-image: url('./SRC/Elementos%20do%20Jogo/%C3%8Dcone%20de%20Som%20Baixo.png');
+}
+#volume-slider[data-volume-level="medio"]::-moz-range-thumb {
+    background-image: url('./SRC/Elementos%20do%20Jogo/%C3%8Dcone%20de%20Som%20M%C3%A9dio.png');
+}
+#volume-slider[data-volume-level="maximo"]::-moz-range-thumb {
+    background-image: url('./SRC/Elementos%20do%20Jogo/%C3%8Dcone%20de%20Som%20M%C3%A1ximo.png');
+}
+
+#battle-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rio%20de%20Batalha%20--%20Floresta.png');
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+}
+
+.battle-character {
+    position: absolute;
+    bottom: 243px;
+    width: 230px;
+    height: 180px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    transition: left 0.8s ease-in-out, right 0.8s ease-in-out;
+}
+
+#battle-player {
+    left: 25%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+#battle-enemy {
+    right: 25%;
+    transform: translateX(50%);
+    width: 100px;
+    height: 150px;
+    z-index: 10;
+}
+
+#player-hud {
+    position: absolute;
+    top: 130px;
+    left: 12%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: left 0.8s ease-in-out;
+    z-index: 20;
+}
+
+#enemy-hud {
+    position: absolute;
+    top: 248px;
+    right: 12%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    transition: right 0.8s ease-in-out;
+    z-index: 20;
+}
+
+#enemy-name-text {
+    color: white;
+    font-size: 1.2em;
+    text-shadow: 2px 2px #000;
+    padding-right: 10px;
+}
+
+.status-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.status-bar-container.enemy .status-icon {
+    transform: scaleX(-1);
+}
+
+.status-bar {
+    width: 250px;
+    height: 30px;
+    background-color: #333;
+    border: 3px solid #000;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.5);
+}
+
+.status-bar-fill {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.5s ease-in-out;
+}
+
+#player-health-fill {
+    background-color: #c0392b;
+    width: 100%;
+}
+
+#player-stamina-fill {
+    background-color: #2980b9;
+    width: 100%;
+}
+
+#enemy-health-fill {
+    background-color: #c0392b;
+    width: 100%;
+}
+
+.status-bar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.8em;
+    text-shadow: 1px 1px #000;
+}
+
+#battle-actions-container {
+    width: 100%;
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#actions-background {
+    background-color: #5a3a22;
+    border: 4px solid #4a2c2a;
+    width: 100%;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+#roll-dice-btn {
+    width: 300px;
+    height: 70px;
+    background-color: #1a2a88;
+    border: 4px solid #0d1544;
+    border-radius: 10px;
+    box-shadow: 
+        inset 2px 2px 0 0 #6a8dff,
+        inset -2px -2px 0 0 #0d1544,
+        0 5px 0 0 #0d1544;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+    position: relative;
+    transition: top 0.1s ease-out, box-shadow 0.1s ease-out, background-color 0.2s;
+}
+
+#roll-dice-btn:active {
+    top: 5px;
+    box-shadow: 
+        inset 2px 2px 0 0 #6a8dff,
+        inset -2px -2px 0 0 #0d1544,
+        0 0 0 0 #0d1544;
+}
+
+#roll-dice-btn.disabled {
+    top: 5px;
+    background-color: #888;
+    box-shadow: 
+        inset 2px 2px 0 0 #aaa,
+        inset -2px -2px 0 0 #555,
+        0 0 0 0 #555;
+    cursor: not-allowed;
+    color: #ccc;
+}
+
+
+#potion-slots-container {
+    display: flex;
+    gap: 10px;
+}
+
+.potion-slot {
+    width: 100px;
+    height: 100px;
+    background-image: url('./SRC/Elementos%20do%20Jogo/Espa%C3%A7o%20para%20Equipar%20Po%C3%A7%C3%A3o.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#dice-animation-container {
+    position: absolute; /* Alterado de fixed para absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5000;
+}
+
+#dice-gif {
+    width: 200px;
+    height: auto;
+}
+
+#dice-result-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5001;
+}
+
+#dice-result {
+    color: white;
+    font-size: 15em;
+    text-shadow: 5px 5px 10px black;
+    animation: growAndFade 2s forwards;
+}
+
+#attack-impact-img {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 200px;
+    z-index: 25;
+    pointer-events: none;
+}
+
+.floating-text {
+    position: absolute;
+    font-size: 2em;
+    text-shadow: 2px 2px #000;
+    pointer-events: none;
+    z-index: 25;
+    animation: floatUp 2s forwards;
+}
+
+#speed-multiplier-btn {
+    position: absolute;
+    bottom: 250px;
+    left: 20px;
+    width: 110px;
+    height: 80px;
+    background-color: #8c5a3b;
+    border: 4px solid #4f382e;
+    border-radius: 15px;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5em;
+    text-shadow: 2px 2px #000;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+    transition: transform 0.1s ease;
+}
+
+#speed-multiplier-btn:active {
+    transform: scale(0.95);
+}
+
+#victory-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rio%20de%20Batalha%20--%20Floresta.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-shadow: 3px 3px 5px #000;
+}
+
+#victory-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#victory-title {
+    font-size: 3em;
+    color: #ffc700;
+    margin-bottom: 10px;
+}
+
+#victory-rewards {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+}
+
+#victory-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.victory-btn {
+    width: 200px;
+    height: 70px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    color: #ffffff;
+    text-shadow: 2px 2px #000;
+    background-color: #8c5a3b;
+    border: none;
+    border-radius: 8px;
+    box-shadow: inset 0 -4px 0 0 #5a3a22, inset 0 4px 0 0 #a57d65, 0 8px 0 0 #4a2c2a;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: top 0.1s ease-out, box-shadow 0.1s ease-out;
+}
+
+.victory-btn:active {
+    top: 8px;
+    box-shadow: inset 0 -4px 0 0 #5a3a22, inset 0 4px 0 0 #a57d65, 0 0px 0 0 #4a2c2a;
+}
+
+#defeat-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rio%20de%20Batalha%20--%20Floresta.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-shadow: 3px 3px 5px #000;
+}
+
+#defeat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#defeat-title {
+    font-size: 3em;
+    color: #c0392b;
+    margin-bottom: 10px;
+}
+
+#defeat-subtitle {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+}
+
+#defeat-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.defeat-btn {
+    width: 200px;
+    height: 70px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    color: #ffffff;
+    text-shadow: 2px 2px #000;
+    background-color: #8c5a3b;
+    border: none;
+    border-radius: 8px;
+    box-shadow: inset 0 -4px 0 0 #5a3a22, inset 0 4px 0 0 #a57d65, 0 8px 0 0 #4a2c2a;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: top 0.1s ease-out, box-shadow 0.1s ease-out;
+}
+
+.defeat-btn:active {
+    top: 8px;
+    box-shadow: inset 0 -4px 0 0 #5a3a22, inset 0 4px 0 0 #a57d65, 0 0px 0 0 #4a2c2a;
+}
+
+#end-of-beta-screen {
+    background-image: url('./SRC/Cen%C3%A1rios/Cen%C3%A1rio%20de%20Batalha%20--%20Floresta.png');
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+}
+
+#end-of-beta-content {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    max-width: 600px;
+}
+
+#end-of-beta-content h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+#end-of-beta-content p {
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+#end-of-beta-footer {
+    margin-top: 30px;
+    font-size: 1em;
+    font-style: italic;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
+
+
+@keyframes growAndFade {
+    0% {
+        transform: scale(0.1);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
